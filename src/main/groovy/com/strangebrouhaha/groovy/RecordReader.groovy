@@ -42,6 +42,7 @@ class RecordReader {
                 }
             } else if (Character.isDigit(line.charAt(0))) {
                 // we only want the first shelf info line, regardless of how many there are
+                // if a record has more than 10 checkouts, lines are zero-padded ("01" vs "1")
                 if ((Integer.parseInt(line.charAt(0).toString()) == 1 && !Character.isDigit(line.charAt(1))) || line.substring(0, 2) == "01") {
                     readerRecord.append("SHELFINFO", line.substring(line.indexOf('>') + 1, line.length() - 20).trim())
                 }
