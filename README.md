@@ -34,3 +34,12 @@ computer. Open a command prompt and run the Usage command from that location.
 2. `<input>` is the name of the input file containing the records
 3. The optional `[output]` lets you choose the name of the file to write. If you don't provide a
 name, RR will create and use `record.csv` in your current directory.
+
+## Changing output
+
+To modify the output, edit `ReaderRecord.groovy`. The `columns()` method contains the list of
+columns in the order they will display and the `header()` method contains the list of column 
+names for the CSV header. 
+
+For example, to remove `ALT AUTHOR`, you would remove `ALTAUTHOR` from `columns()` and `ALT AUTHOR`
+from `header()`, and rebuild.
