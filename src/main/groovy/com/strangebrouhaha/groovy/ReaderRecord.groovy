@@ -20,6 +20,29 @@ class ReaderRecord {
     String ISBNISSN
     String SHELFINFO
 
+    static String[] columns() {
+        String[] columns = ["id",
+                            "TITLE",
+                            "UNIFTITLE",
+                            "AUTHOR",
+                            "ISBNISSN",
+                            "LOCATIONS",
+                            "SHELFINFO",
+                            "IMPRINT",
+                            "EDITION",
+                            "SUBJECT",
+                            "NOTE",
+                            "SERIES",
+                            "DESCRIPT",
+                            "ALTTITLE",
+                            "ALTAUTHOR"
+        ] as String[]
+    }
+
+    static String header() {
+        "id, TITLE, UNIF TITLE, AUTHOR, ISBN/ISSN, LOCATIONS, SHELF INFO, IMPRINT, EDITION, SUBJECT, NOTE, SERIES, DESCRIPT, ALT TITLE, ALT AUTHOR\r\n"
+    }
+
     @Override
     String toString() {
         "$id, $LOCATIONS, $AUTHOR, $UNIFTITLE, $TITLE, $ALTTITLE, $EDITION, $IMPRINT, $DESCRIPT, $SERIES, $NOTE, $SUBJECT, $ALTAUTHOR, $ISBNISSN, $SHELFINFO"

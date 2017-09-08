@@ -75,26 +75,10 @@ class RecordReader {
         Writer writer = new FileWriter(outputFilename)
         ColumnPositionMappingStrategy mappingStrategy = new ColumnPositionMappingStrategy()
         mappingStrategy.setType(ReaderRecord)
-        String[] columns = ["id",
-                            "TITLE",
-                            "UNIFTITLE",
-                            "AUTHOR",
-                            "ISBNISSN",
-                            "LOCATIONS",
-                            "SHELFINFO",
-                            "IMPRINT",
-                            "EDITION",
-                            "SUBJECT",
-                            "NOTE",
-                            "SERIES",
-                            "DESCRIPT",
-                            "ALTTITLE",
-                            "ALTAUTHOR"
-        ] as String[]
+        mappingStrategy.setColumnMapping(ReaderRecord.columns())
         // we get the headers if we don't use a MappingStrategy, but they're in an unfriendly order
         // since we want them in a friendly order, we have to write them out ourselves
-        writer.write"id, TITLE, UNIF TITLE, AUTHOR, ISBN/ISSN, LOCATIONS, SHELF INFO, IMPRINT, EDITION, SUBJECT, NOTE, SERIES, DESCRIPT, ALT TITLE, ALT AUTHOR\r\n"
-        mappingStrategy.setColumnMapping(columns)
+        writer.write ReaderRecord.header()
         mappingStrategy.generateHeader()
         StatefulBeanToCsvBuilder<ReaderRecord> beanToCsvBuilder =
                 new StatefulBeanToCsvBuilder<>(writer).withMappingStrategy(mappingStrategy)

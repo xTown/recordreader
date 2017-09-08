@@ -5,3 +5,4 @@ build/tmp/
 out/
 export.txt
 record.csv
+.DS_Store
