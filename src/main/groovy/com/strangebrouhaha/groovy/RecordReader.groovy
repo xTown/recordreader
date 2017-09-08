@@ -42,8 +42,8 @@ class RecordReader {
                 }
             } else if (Character.isDigit(line.charAt(0))) {
                 // we only want the first shelf info line, regardless of how many there are
-                if (Integer.parseInt(line.charAt(0).toString()) == 1) {
-                    readerRecord.append("SHELFINFO", line.substring(3, line.length() - 20).trim())
+                if ((Integer.parseInt(line.charAt(0).toString()) == 1 && !Character.isDigit(line.charAt(1))) || line.substring(0, 2) == "01") {
+                    readerRecord.append("SHELFINFO", line.substring(line.indexOf('>') + 1, line.length() - 20).trim())
                 }
             }
         }

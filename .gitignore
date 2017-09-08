@@ -3,3 +3,5 @@
 build/classes/
 build/tmp/
 out/
+export.txt
+record.csv
