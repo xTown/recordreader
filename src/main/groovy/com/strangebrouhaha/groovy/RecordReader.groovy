@@ -2,8 +2,12 @@ package com.strangebrouhaha.groovy
 
 import com.opencsv.bean.ColumnPositionMappingStrategy
 import com.opencsv.bean.StatefulBeanToCsvBuilder
+import groovy.swing.SwingBuilder
 
+import javax.swing.*
+import java.awt.*
 import java.nio.file.Files
+import java.util.List
 
 class RecordReader {
 
@@ -51,17 +55,17 @@ class RecordReader {
         readerRecord
     }
 
-    static void main (String[] args) {
+    static void convert(List<String> args) {
         if (args.size() == 0) {
             System.err << "ERROR: Please provide a filename."
             return
         }
 
-        String outputFilename = args.size() == 2 ? args[1] : "record.csv"
+        String outputFilename = args.size() == 2 ? args.get(1) : "record.csv"
 
         RecordReader recordReader = new RecordReader()
 
-        File file = new File(args[0])
+        File file = new File(args.get(0))
         String[] fileContents = file.getText('ISO-8859-1').split(/\r\n\r\n/)
         File outputFile = new File(outputFilename)
         Files.deleteIfExists(outputFile.toPath())
@@ -84,6 +88,77 @@ class RecordReader {
                 new StatefulBeanToCsvBuilder<>(writer).withMappingStrategy(mappingStrategy)
         beanToCsvBuilder.build().write(readerRecords)
         writer.close()
+    }
 
+    static void main (String[] args) {
+        List<String> data = []
+        SwingBuilder sb = new SwingBuilder()
+        sb.edt {
+            dialog(
+                    title: 'Convert Records to CSV',
+                    defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
+                    size: [400, 200],
+                    show: true
+            ) {
+                lookAndFeel("system")
+                panel {
+                    gridBagLayout()
+                    source = textField(
+                            text: '(No source file selected)',
+                            constraints: gbc(
+                                    gridx:0,
+                                    gridy:0,
+                                    gridwidth:GridBagConstraints.REMAINDER,
+                                    fill:GridBagConstraints.HORIZONTAL
+                            ),
+                    )
+
+                    button(
+                            constraints: gbc(
+                                    gridx:0,
+                                    gridy:1
+                            ),
+                            text: 'Choose File...',
+                            actionPerformed: {
+                                JFileChooser file = sb.fileChooser(
+                                    dialogTitle: 'Select a record file',
+                                    fileSelectionMode: JFileChooser.FILES_AND_DIRECTORIES
+                                )
+                                if (file.showOpenDialog() == JFileChooser.APPROVE_OPTION) {
+                                    data.add(file.selectedFile.toString())
+                                    source.text = file.selectedFile.toString()
+                                }
+                            }
+                    )
+
+                    button(
+                            constraints: gbc(
+                                    gridx:2,
+                                    gridy:3,
+                                    insets:[10,0,0,0],
+                                    anchor:GridBagConstraints.CENTER
+                            ),
+                            text: 'Cancel',
+                            actionPerformed: {
+                                dispose()
+                            }
+                    )
+
+                    button(
+                            constraints: gbc(
+                                    gridx:3,
+                                    gridy:3,
+                                    insets:[10,0,0,0],
+                                    anchor:GridBagConstraints.CENTER
+                            ),
+                            text: 'Convert',
+                            actionPerformed: {
+                                convert(data)
+                                dispose()
+                            }
+                    )
+                }
+            }
+        }
     }
 }
