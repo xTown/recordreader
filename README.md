@@ -24,16 +24,13 @@ ISBN/ISSN    987654321.
 Record Reader converts each record into a `ReaderRecord` bean, stores those beans in a list,
 then writes them out to a plain CSV file.
 
-Usage:
+## Usage
+Download `build/libs/reader-record-<version>-all.jar` to somewhere easy to remember on your 
+computer. Double-click it to run.
 
-`$ java -jar reader-record-<version>-all.jar <input> [output]`
-
-Notes:
-1. Download `build/libs/reader-record-<version>-all.jar` to somewhere easy to remember on your 
-computer. Open a command prompt and run the Usage command from that location.
-2. `<input>` is the name of the input file containing the records
-3. The optional `[output]` lets you choose the name of the file to write. If you don't provide a
-name, RR will create and use `record.csv` in your current directory.
+Click the `Choose File...` button to choose the source file, then click `Convert`
+to convert the file. It will automatically create a file called `record.csv` in the same 
+directory that contains the `jar` file.
 
 ## Changing output
 
