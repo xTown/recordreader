@@ -31,12 +31,3 @@ application's `jar` file to somewhere easy to remember on your computer. Once it
 Click the `Choose File...` button to choose the source file, then click `Convert`
 to convert the file. It will automatically create a file called `record.csv` in the same 
 directory that contains the `jar` file.
-
-## Changing output
-
-To modify the output, edit `ReaderRecord.groovy`. The `columns()` method contains the list of
-columns in the order they will display and the `header()` method contains the list of column 
-names for the CSV header. 
-
-For example, to remove `ALT AUTHOR`, you would remove `ALTAUTHOR` from `columns()` and `ALT AUTHOR`
-from `header()`, and rebuild.
