@@ -25,18 +25,9 @@ Record Reader converts each record into a `ReaderRecord` bean, stores those bean
 then writes them out to a plain CSV file.
 
 ## Usage
-Download `build/libs/reader-record-<version>-all.jar` to somewhere easy to remember on your 
-computer. Double-click it to run.
+[Click here](https://github.com/xTown/recordreader/raw/master/build/libs/reader-record-0.2-all.jar) to download the 
+application's `jar` file to somewhere easy to remember on your computer. Once it's downloaded, double-click it to run.
 
 Click the `Choose File...` button to choose the source file, then click `Convert`
 to convert the file. It will automatically create a file called `record.csv` in the same 
 directory that contains the `jar` file.
-
-## Changing output
-
-To modify the output, edit `ReaderRecord.groovy`. The `columns()` method contains the list of
-columns in the order they will display and the `header()` method contains the list of column 
-names for the CSV header. 
-
-For example, to remove `ALT AUTHOR`, you would remove `ALTAUTHOR` from `columns()` and `ALT AUTHOR`
-from `header()`, and rebuild.
