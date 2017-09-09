@@ -55,6 +55,7 @@ class RecordReader {
         readerRecord
     }
 
+    // TODO Yes, I know. This was a q-and-d conversion from a main() method. I'll fix it.
     static void convert(Map<String, String> args, Boolean briefMode) {
 
         String outputFilename = args.containsKey("output") ? args.get("output") : "record.csv"
