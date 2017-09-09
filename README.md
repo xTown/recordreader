@@ -31,3 +31,7 @@ application's `jar` file to somewhere easy to remember on your computer. Once it
 Click the `Choose File...` button to choose the source file, then click `Convert`
 to convert the file. It will automatically create a file called `record.csv` in the same 
 directory that contains the `jar` file.
+
+### Brief Mode
+In the UI, click the `Brief Mode` checkbox to enable abbreviated output that includes
+only the AUTHOR, TITLE, IMPRINT, and UNIF TITLE columns.
