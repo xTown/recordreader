@@ -55,17 +55,13 @@ class RecordReader {
         readerRecord
     }
 
-    static void convert(List<String> args) {
-        if (args.size() == 0) {
-            System.err << "ERROR: Please provide a filename."
-            return
-        }
+    static void convert(Map<String, String> args, Boolean briefMode) {
 
-        String outputFilename = args.size() == 2 ? args.get(1) : "record.csv"
+        String outputFilename = args.containsKey("output") ? args.get("output") : "record.csv"
 
         RecordReader recordReader = new RecordReader()
 
-        File file = new File(args.get(0))
+        File file = new File(args.get("file"))
         String[] fileContents = file.getText('ISO-8859-1').split(/\r\n\r\n/)
         File outputFile = new File(outputFilename)
         Files.deleteIfExists(outputFile.toPath())
@@ -79,10 +75,18 @@ class RecordReader {
         Writer writer = new FileWriter(outputFilename)
         ColumnPositionMappingStrategy mappingStrategy = new ColumnPositionMappingStrategy()
         mappingStrategy.setType(ReaderRecord)
-        mappingStrategy.setColumnMapping(ReaderRecord.columns())
+        if (briefMode) {
+            mappingStrategy.setColumnMapping(ReaderRecord.briefColumns())
+        } else {
+            mappingStrategy.setColumnMapping(ReaderRecord.columns())
+        }
         // we get the headers if we don't use a MappingStrategy, but they're in an unfriendly order
         // since we want them in a friendly order, we have to write them out ourselves
-        writer.write ReaderRecord.header()
+        if (briefMode) {
+            writer.write ReaderRecord.briefHeader()
+        } else {
+            writer.write ReaderRecord.header()
+        }
         mappingStrategy.generateHeader()
         StatefulBeanToCsvBuilder<ReaderRecord> beanToCsvBuilder =
                 new StatefulBeanToCsvBuilder<>(writer).withMappingStrategy(mappingStrategy)
@@ -91,13 +95,13 @@ class RecordReader {
     }
 
     static void main (String[] args) {
-        List<String> data = []
+        Map<String, String> data = [:]
         SwingBuilder sb = new SwingBuilder()
         sb.edt {
             dialog(
                     title: 'Convert Records to CSV',
                     defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
-                    size: [400, 200],
+                    size: [500, 200],
                     show: true
             ) {
                 lookAndFeel("system")
@@ -125,10 +129,18 @@ class RecordReader {
                                     fileSelectionMode: JFileChooser.FILES_AND_DIRECTORIES
                                 )
                                 if (file.showOpenDialog() == JFileChooser.APPROVE_OPTION) {
-                                    data.add(file.selectedFile.toString())
+                                    data.put("file", file.selectedFile.toString())
                                     source.text = file.selectedFile.toString()
                                 }
                             }
+                    )
+
+                    briefMode = checkBox(
+                            constraints: gbc(
+                                    gridx:2,
+                                    gridy:1
+                            ),
+                            text: 'Brief Mode'
                     )
 
                     button(
@@ -153,7 +165,7 @@ class RecordReader {
                             ),
                             text: 'Convert',
                             actionPerformed: {
-                                convert(data)
+                                convert(data, briefMode.selected)
                                 dispose()
                             }
                     )

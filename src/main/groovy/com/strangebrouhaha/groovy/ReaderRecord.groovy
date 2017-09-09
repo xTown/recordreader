@@ -37,10 +37,26 @@ class ReaderRecord {
                             "ALTTITLE",
                             "ALTAUTHOR"
         ] as String[]
+        return columns
+    }
+
+    static String[] briefColumns() {
+        String[] columns = [
+                "id",
+                "AUTHOR",
+                "TITLE",
+                "IMPRINT",
+                "UNIFTITLE"
+        ] as String[]
+        return columns
     }
 
     static String header() {
         "id, TITLE, UNIF TITLE, AUTHOR, ISBN/ISSN, LOCATIONS, SHELF INFO, IMPRINT, EDITION, SUBJECT, NOTE, SERIES, DESCRIPT, ALT TITLE, ALT AUTHOR\r\n"
+    }
+
+    static String briefHeader() {
+        "id, AUTHOR, TITLE, IMPRINT, UNIF TITLE\r\n"
     }
 
     @Override
