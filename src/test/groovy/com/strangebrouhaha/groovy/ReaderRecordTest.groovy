@@ -63,4 +63,23 @@ class ReaderRecordTest {
         String input = "Record 1 of 1\nAUTHOR       Author One\nAUTHOR       Author Two\nAUTHOR       Author Three"
         assertEquals("Author One; Author Two; Author Three", recordReader.convertEntryToReaderRecord(input).AUTHOR)
     }
+
+    @Test
+    void testFormatExtractor() throws Exception {
+        String input = "Record 1 of 1\nTITLE        This is a title and [format string] is what we want to extract"
+        assertEquals("format string", recordReader.convertEntryToReaderRecord(input).FORMAT)
+    }
+
+    @Test
+    void testFormatExtractorWithNoFormat() throws Exception {
+        String input = "Record 1 of 1\nTITLE        This is a title with no format string"
+        assertEquals("print book", recordReader.convertEntryToReaderRecord(input).FORMAT)
+    }
+
+    @Test
+    void testYearExtractor() throws Exception {
+        String input = "Record 1 of 1\nIMPRINT      This input string ends with a year 2013."
+        assertEquals("2013", recordReader.convertEntryToReaderRecord(input).YEAR)
+    }
+
 }

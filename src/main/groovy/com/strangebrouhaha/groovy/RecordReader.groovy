@@ -43,6 +43,14 @@ class RecordReader {
                 // suppress that, it's irrelevant
                 if (pair.key != "LOCATION" && !pair.value.contains("CALL")) {
                     readerRecord.append(pair.key, pair.value)
+                    // create FORMAT from TITLE (anything in [])
+                    if (pair.key == "TITLE") {
+                        readerRecord.append("FORMAT", readerRecord.getFormatStringFromTitle(pair.value))
+                    }
+                    // create YEAR from IMPRINT (last 6 characters, strip non-digits)
+                    if (pair.key == "IMPRINT") {
+                        readerRecord.append("YEAR", readerRecord.getYearFromImprint(pair.value))
+                    }
                 }
             } else if (Character.isDigit(line.charAt(0))) {
                 // we only want the first shelf info line, regardless of how many there are

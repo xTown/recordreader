@@ -1,5 +1,5 @@
 group 'com.strangebrouhaha.groovy'
-version '0.2'
+version '0.3'
 
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'groovy'
