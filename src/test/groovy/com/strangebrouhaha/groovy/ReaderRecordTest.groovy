@@ -82,4 +82,9 @@ class ReaderRecordTest {
         assertEquals("2013", recordReader.convertEntryToReaderRecord(input).YEAR)
     }
 
+    @Test
+    void testNullImprintWithYearExtractor() throws Exception {
+        String input = "Record 1 of 1\nTITLE        This is a title. We have no imprint."
+        assertNull(recordReader.convertEntryToReaderRecord(input).YEAR)
+    }
 }

@@ -87,11 +87,17 @@ class ReaderRecord {
     }
 
     String getFormatStringFromTitle(String title) {
-        Matcher matchers = title =~ /\[.*\]/
-        String format = matchers.size() > 0 ? matchers[0].replaceAll(/\[|\]/, "") : "print book"
+        Matcher matchers = title =~ /\[.*\] [\/|=|:]/
+        if (matchers.size() != 0) {
+            System.err.println "MATCH ZERO ${matchers[0]}"
+        }
+        String format = matchers.size() > 0 ? matchers[0].replaceAll(/\[|\/|:|=|\]/, "") : "book"
     }
 
     String getYearFromImprint(String imprint) {
+        if (null == imprint) {
+            return null
+        }
         // some imprints are just the year followed by a period
         if (imprint.size() < 6) {
             imprint.replaceAll(/[^0-9]/,"")
