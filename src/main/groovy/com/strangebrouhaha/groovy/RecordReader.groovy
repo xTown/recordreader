@@ -11,22 +11,18 @@ import java.util.List
 
 class RecordReader {
 
-    Long getIdFromRecordLine(String recordLine) {
-        return Long.parseLong(recordLine.split()[1])
-    }
-
     ReaderRecord convertEntryToReaderRecord(String entry) {
         // id from first line
         // first 13 characters are field unless first character is a digit
         ReaderRecord readerRecord = new ReaderRecord()
         List<String> lines = (entry.split(/\n/)).toList()
-        readerRecord.setId(getIdFromRecordLine(lines.get(0)))
+        readerRecord.setId(ReaderRecord.getIdFromRecordLine(lines.get(0)))
         // some lines are continuations and don't have a key
         // we need to remember the previous key
         String tKey
         lines.eachWithIndex { line, index ->
             if (index > 0 && !Character.isDigit(line.charAt(0))) {
-                Pair pair = readerRecord.toPair(line)
+                RecordPair pair = new RecordPair(line)
                 if (tKey == null) {
                     tKey = pair.key
                 } else if (tKey == "ISBN/ISSN") {
@@ -53,9 +49,13 @@ class RecordReader {
             }
         }
         // create YEAR from IMPRINT (last 6 characters, strip non-digits)
-        readerRecord.append("YEAR", readerRecord.getYearFromImprint(readerRecord.IMPRINT))
+        if (null != readerRecord.IMPRINT) {
+            readerRecord.append("YEAR", readerRecord.getYearFromImprint(readerRecord.IMPRINT))
+        }
         // create FORMAT from TITLE (anything in [])
-        readerRecord.append("FORMAT", readerRecord.getFormatStringFromTitle(readerRecord.TITLE))
+        if (null != readerRecord.TITLE) {
+            readerRecord.append("FORMAT", readerRecord.getFormatStringFromTitle(readerRecord.TITLE))
+        }
         readerRecord
     }
 
@@ -66,33 +66,31 @@ class RecordReader {
 
         RecordReader recordReader = new RecordReader()
 
-        File file = new File(args.get("file"))
-        String[] fileContents = file.getText('ISO-8859-1').split(/\r\n\r\n/)
-        File outputFile = new File(outputFilename)
-        Files.deleteIfExists(outputFile.toPath())
-        outputFile.createNewFile()
+        File inputFile = new File(args.get("file"))
+        String[] fileContents = inputFile.getText('ISO-8859-1').split(/\r\n\r\n/)
 
         List<ReaderRecord> readerRecords = []
         fileContents.each {
             readerRecords.add(recordReader.convertEntryToReaderRecord(it))
         }
 
+        File outputFile = new File(outputFilename)
+        Files.deleteIfExists(outputFile.toPath())
+        outputFile.createNewFile()
         Writer writer = new FileWriter(outputFilename)
+
         ColumnPositionMappingStrategy mappingStrategy = new ColumnPositionMappingStrategy()
         mappingStrategy.setType(ReaderRecord)
-        if (briefMode) {
-            mappingStrategy.setColumnMapping(ReaderRecord.briefColumns())
-        } else {
-            mappingStrategy.setColumnMapping(ReaderRecord.columns())
-        }
         // we get the headers if we don't use a MappingStrategy, but they're in an unfriendly order
         // since we want them in a friendly order, we have to write them out ourselves
         if (briefMode) {
+            mappingStrategy.setColumnMapping(ReaderRecord.briefColumns())
             writer.write ReaderRecord.briefHeader()
         } else {
+            mappingStrategy.setColumnMapping(ReaderRecord.columns())
             writer.write ReaderRecord.header()
         }
-        mappingStrategy.generateHeader()
+
         StatefulBeanToCsvBuilder<ReaderRecord> beanToCsvBuilder =
                 new StatefulBeanToCsvBuilder<>(writer).withMappingStrategy(mappingStrategy)
         beanToCsvBuilder.build().write(readerRecords)

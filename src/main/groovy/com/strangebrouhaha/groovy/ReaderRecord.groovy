@@ -3,6 +3,7 @@ package com.strangebrouhaha.groovy
 import groovy.transform.Canonical
 
 import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 @Canonical
 class ReaderRecord {
@@ -72,12 +73,6 @@ class ReaderRecord {
         "$id, $LOCATIONS, $AUTHOR, $UNIFTITLE, $TITLE, $ALTTITLE, $EDITION, $IMPRINT, $DESCRIPT, $SERIES, $NOTE, $SUBJECT, $ALTAUTHOR, $ISBNISSN, $SHELFINFO"
     }
 
-    Pair toPair(String line) {
-        String key = line.substring(0, 12).trim()
-        String value = line.substring(13).trim()
-        return new Pair(key, value)
-    }
-
     void append(String key, String value) {
         if (null == this[key]) {
             this[key] = value
@@ -87,11 +82,9 @@ class ReaderRecord {
     }
 
     String getFormatStringFromTitle(String title) {
-        Matcher matchers = title =~ /\[.*\] [\/|=|:]/
-        if (matchers.size() != 0) {
-            System.err.println "MATCH ZERO ${matchers[0]}"
-        }
-        String format = matchers.size() > 0 ? matchers[0].replaceAll(/\[|\/|:|=|\]/, "") : "book"
+        Pattern bracketPattern = Pattern.compile(/\[(.*?)]/)
+        Matcher matchers = bracketPattern.matcher(title)
+        String format = matchers.size() > 0 ? matchers[0][1] : "book"
     }
 
     String getYearFromImprint(String imprint) {
@@ -105,5 +98,9 @@ class ReaderRecord {
             // otherwise, the year could be enclosed in [] or preceded with p or c or other text
             imprint.substring(imprint.size() - 6).replaceAll(/[^0-9]/, "")
         }
+    }
+
+    static Long getIdFromRecordLine(String recordLine) {
+        Long.parseLong(recordLine.split()[1])
     }
 }

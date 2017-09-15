@@ -43,7 +43,7 @@ class ReaderRecordTest {
 
     @Test
     void testNumRecordsParser() throws Exception {
-        assertEquals(10L, recordReader.getIdFromRecordLine("Record 10 of 900"))
+        assertEquals(10L, ReaderRecord.getIdFromRecordLine("Record 10 of 900"))
     }
 
     @Test
@@ -66,14 +66,14 @@ class ReaderRecordTest {
 
     @Test
     void testFormatExtractor() throws Exception {
-        String input = "Record 1 of 1\nTITLE        This is a title and [format string] is what we want to extract"
+        String input = "Record 1 of 1\nTITLE        This is a title and [format string] / is what we want to extract"
         assertEquals("format string", recordReader.convertEntryToReaderRecord(input).FORMAT)
     }
 
     @Test
     void testFormatExtractorWithNoFormat() throws Exception {
         String input = "Record 1 of 1\nTITLE        This is a title with no format string"
-        assertEquals("print book", recordReader.convertEntryToReaderRecord(input).FORMAT)
+        assertEquals("book", recordReader.convertEntryToReaderRecord(input).FORMAT)
     }
 
     @Test
