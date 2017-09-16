@@ -43,48 +43,48 @@ class ReaderRecordTest {
 
     @Test
     void testNumRecordsParser() throws Exception {
-        assertEquals(10L, ReaderRecord.getIdFromRecordLine("Record 10 of 900"))
+        assertEquals(10L, ReaderRecordUtils.getIdFromRecordLine("Record 10 of 900"))
     }
 
     @Test
     void testOnlyOneShelfInfo() throws Exception {
         String input = "Record 1 of 1\n1 > Keep this but chop off              this part\n2 > this should not display at all"
-        assertEquals("Keep this but chop off", recordReader.convertEntryToReaderRecord(input).SHELFINFO)
+        assertEquals("Keep this but chop off", ReaderRecordUtils.convertEntryToReaderRecord(input).SHELFINFO)
     }
 
     @Test
     void testOnlyOneIsbn() throws Exception {
         String input = "Record 1 of 1\nISBN/ISSN    1234567890\nISBN/ISSN    0987654321\nISBN/ISSN    9999999999"
-        assertEquals("1234567890", recordReader.convertEntryToReaderRecord(input).ISBNISSN)
+        assertEquals("1234567890", ReaderRecordUtils.convertEntryToReaderRecord(input).ISBNISSN)
     }
 
     @Test
     void testAppending() throws Exception {
         String input = "Record 1 of 1\nAUTHOR       Author One\nAUTHOR       Author Two\nAUTHOR       Author Three"
-        assertEquals("Author One; Author Two; Author Three", recordReader.convertEntryToReaderRecord(input).AUTHOR)
+        assertEquals("Author One; Author Two; Author Three", ReaderRecordUtils.convertEntryToReaderRecord(input).AUTHOR)
     }
 
     @Test
     void testFormatExtractor() throws Exception {
         String input = "Record 1 of 1\nTITLE        This is a title and [format string] / is what we want to extract"
-        assertEquals("format string", recordReader.convertEntryToReaderRecord(input).FORMAT)
+        assertEquals("format string", ReaderRecordUtils.convertEntryToReaderRecord(input).FORMAT)
     }
 
     @Test
     void testFormatExtractorWithNoFormat() throws Exception {
         String input = "Record 1 of 1\nTITLE        This is a title with no format string"
-        assertEquals("book", recordReader.convertEntryToReaderRecord(input).FORMAT)
+        assertEquals("book", ReaderRecordUtils.convertEntryToReaderRecord(input).FORMAT)
     }
 
     @Test
     void testYearExtractor() throws Exception {
         String input = "Record 1 of 1\nIMPRINT      This input string ends with a year 2013."
-        assertEquals("2013", recordReader.convertEntryToReaderRecord(input).YEAR)
+        assertEquals("2013", ReaderRecordUtils.convertEntryToReaderRecord(input).YEAR)
     }
 
     @Test
     void testNullImprintWithYearExtractor() throws Exception {
         String input = "Record 1 of 1\nTITLE        This is a title. We have no imprint."
-        assertNull(recordReader.convertEntryToReaderRecord(input).YEAR)
+        assertNull(ReaderRecordUtils.convertEntryToReaderRecord(input).YEAR)
     }
 }

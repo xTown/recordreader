@@ -2,9 +2,6 @@ package com.strangebrouhaha.groovy
 
 import groovy.transform.Canonical
 
-import java.util.regex.Matcher
-import java.util.regex.Pattern
-
 @Canonical
 class ReaderRecord {
     Long id
@@ -79,28 +76,5 @@ class ReaderRecord {
         } else {
             this[key] += "; ${value}"
         }
-    }
-
-    String getFormatStringFromTitle(String title) {
-        Pattern bracketPattern = Pattern.compile(/\[(.*?)]/)
-        Matcher matchers = bracketPattern.matcher(title)
-        String format = matchers.size() > 0 ? matchers[0][1] : "book"
-    }
-
-    String getYearFromImprint(String imprint) {
-        if (null == imprint) {
-            return null
-        }
-        // some imprints are just the year followed by a period
-        if (imprint.size() < 6) {
-            imprint.replaceAll(/[^0-9]/,"")
-        } else {
-            // otherwise, the year could be enclosed in [] or preceded with p or c or other text
-            imprint.substring(imprint.size() - 6).replaceAll(/[^0-9]/, "")
-        }
-    }
-
-    static Long getIdFromRecordLine(String recordLine) {
-        Long.parseLong(recordLine.split()[1])
     }
 }
