@@ -6,10 +6,47 @@ import java.util.regex.Pattern
 
 class ReaderRecordUtils {
 
+    static List<String> formats = [
+            "audiocassette",
+            "Blu",
+            "book",
+            "CD",
+            "compact disc",
+            "computer",
+            "Downloadable Audiobook",
+            "Downloadable eBook",
+            "DVD",
+            "electronic resource",
+            "graphic novel",
+            "kit",
+            "large",
+            "magazine",
+            "map",
+            "microfilm",
+            "microform",
+            "motion picture",
+            "MP3",
+            "newspaper",
+            "sound recording",
+            "Streaming media",
+            "VHS",
+            "Videocassette",
+            "video game",
+            "videorecording",
+            "paperback"
+    ]
+
     static String getFormatStringFromTitle(String title) {
         Pattern bracketPattern = Pattern.compile(/\[(.*?)]/)
         Matcher matchers = bracketPattern.matcher(title)
         String format = matchers.size() > 0 ? matchers[0][1] : "book"
+        for (int i = 0; i < formats.size(); i++) {
+            if (format.startsWith(formats.get(i))) {
+                return format
+            }
+        }
+
+        "unknown"
     }
 
     static String getYearFromImprint(String imprint) {
